@@ -206,4 +206,4 @@ def print_xml_report(covdata, output_file, options):
 
     # Populate the <sources> element: this is the root directory
     etree.SubElement(sources, "source").text = options.root.strip()
-    return etree
+    return root

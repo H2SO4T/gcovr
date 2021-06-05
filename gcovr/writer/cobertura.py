@@ -49,7 +49,7 @@ def print_xml_report(covdata, output_file, options):
     root = etree.Element("coverage")
     root.set(
         "line-rate", lineTotal == 0 and '0.0'
-        or str(float(lineCovered) / lineTotal)
+                     or str(float(lineCovered) / lineTotal)
     )
     root.set(
         "function-rate", functionTotal == 0 and '0.0'
@@ -57,7 +57,7 @@ def print_xml_report(covdata, output_file, options):
     )
     root.set(
         "branch-rate", branchTotal == 0 and '0.0'
-        or str(float(branchCovered) / branchTotal)
+                       or str(float(branchCovered) / branchTotal)
     )
     root.set(
         "lines-covered", str(lineCovered)
@@ -206,11 +206,4 @@ def print_xml_report(covdata, output_file, options):
 
     # Populate the <sources> element: this is the root directory
     etree.SubElement(sources, "source").text = options.root.strip()
-
-    with open_binary_for_writing(output_file, 'coverage.xml') as fh:
-        fh.write(
-            etree.tostring(root,
-                           pretty_print=options.prettyxml,
-                           encoding="UTF-8",
-                           xml_declaration=True,
-                           doctype="<!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-04.dtd'>"))
+    return etree

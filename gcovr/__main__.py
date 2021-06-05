@@ -284,7 +284,7 @@ def main(args=None):
     logger.verbose_msg("Gathered coveraged data for {} files", len(covdata))
 
     # Print reports
-    error_occurred = print_reports(covdata, options, logger)
+    error_occurred, etree_object = print_reports(covdata, options, logger)
     if error_occurred:
         logger.error(
             "Error occurred while printing reports"
@@ -292,8 +292,8 @@ def main(args=None):
         sys.exit(7)
 
     if options.fail_under_line > 0.0 or options.fail_under_branch > 0.0:
-        fail_under(covdata, options.fail_under_line, options.fail_under_branch, logger)
-
+        fail_under(covdata, options.fail_under_line, options.fail_under_branch)
+    return etree_object
 
 def collect_coverage_from_tracefiles(covdata, options, logger):
     datafiles = set()
@@ -427,6 +427,7 @@ def print_reports(covdata, options, logger):
     default_output_used = False
     default_output = OutputOrDefault(None) if options.output is None else options.output
 
+    etree_object = None
     for output_choices, generator, on_no_output in generators:
         output = OutputOrDefault.choose(output_choices, default=default_output)
         if output is not None and output is default_output:
@@ -434,8 +435,7 @@ def print_reports(covdata, options, logger):
             if not output.is_dir:
                 default_output = None
         if output is not None:
-            if generator(covdata, output.abspath, options):
-                generator_error_occurred = True
+            etree_object = generator(covdata, output.abspath, options)
             reports_were_written = True
         else:
             on_no_output()
@@ -451,7 +451,7 @@ def print_reports(covdata, options, logger):
     if options.print_summary:
         print_summary(covdata)
 
-    return generator_error_occurred
+    return generator_error_occurred, etree_object
 
 
 if __name__ == '__main__':

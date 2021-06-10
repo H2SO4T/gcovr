@@ -84,6 +84,14 @@ def find_datafiles(search_path, logger, exclude_dirs):
     return gcda_files + gcno_files
 
 
+noncode_mapper = dict.fromkeys(ord(i) for i in '}{')
+
+
+def is_non_code(code):
+    code = code.strip().translate(noncode_mapper)
+    return len(code) == 0 or code.startswith("//")
+
+
 #
 # Process a single gcov datafile
 #

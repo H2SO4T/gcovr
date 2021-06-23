@@ -89,7 +89,7 @@ noncode_mapper = dict.fromkeys(ord(i) for i in '}{')
 
 def is_non_code(code):
     code = code.strip().translate(noncode_mapper)
-    return len(code) == 0 or code.startswith("//")
+    return len(code) == 0 or code.startswith("//") or code == 'else'
 
 
 #
